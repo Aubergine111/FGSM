@@ -43,6 +43,7 @@ sFunc SFunc;
 bool solveWithoutKnuth(int temp[9][9], int mask[9][9], int sudoku[9][9]);
 void checkValidInput(int mask[9][9], int x, int y, int solve[9][9], int in);
 void gotoxy(int x, int y);
+void settingScreen();
 
 int ingame();
 
@@ -147,7 +148,7 @@ int main()
 	}
 }
 
-int settingScreen()
+void settingScreen()
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	int seed = time(NULL);
@@ -333,7 +334,7 @@ int ingame()
 				solve[i][j] = sudoku[i][j];
 			}
 		}
-		SFunc.Manage.makeHole(solve, 5);
+		SFunc.Manage.makeHole(solve, 4 + (setting.diff / 2));
 		for (int i = 0; i < 9; i++)
 		{
 			for (int j = 0; j < 9; j++)
@@ -361,6 +362,16 @@ int ingame()
 		}
 		printf("\n");
 	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			printf("%d ", sudoku[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n\n");
 #ifdef DEBUG2
 	for (int i = 0; i < 9; i++)
 	{
@@ -595,6 +606,12 @@ bool solveWithoutKnuth(int temp[9][9], int mask[9][9], int sudoku[9][9])
 
 	bool solving = true;
 
+
+	/*이 부분 코드 설명: 
+	비트마스크를 읽어 가능한 경우의 수가 1개이면 바로 체크
+	아닐 시 다른 칸을 읽어 1개로 줄일 수 있으면 체크
+	아닐 시 체크하지 않고 넘어감,
+	81칸 전부 체크에 실패할 시 풀었다 판단하고 루프 탈출*/
 	while (solving)
 	{
 		solving = false;
@@ -602,64 +619,137 @@ bool solveWithoutKnuth(int temp[9][9], int mask[9][9], int sudoku[9][9])
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				switch (mask[i][j])
+				for (int k = 0; k < 9; k++)
 				{
-
-				case 0b100000000:
-				{
-					temp[i][j] = 9;
-					solving = true;
-					break;
+					int tempmask = 1 << k;
+					if (mask[i][j] == tempmask)
+					{
+						temp[i][j] = k + 1;
+						solving = true;
+						break;
+					}
 				}
-				case 0b010000000:
+				//switch (mask[i][j])
+				//{
+				//case 0b100000000:
+				//{
+				//	temp[i][j] = 9;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b010000000:
+				//{
+				//	temp[i][j] = 8;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b001000000:
+				//{
+				//	temp[i][j] = 7;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000100000:
+				//{
+				//	temp[i][j] = 6;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000010000:
+				//{
+				//	temp[i][j] = 5;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000001000:
+				//{
+				//	temp[i][j] = 4;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000000100:
+				//{
+				//	temp[i][j] = 3;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000000010:
+				//{
+				//	temp[i][j] = 2;
+				//	solving = true;
+				//	break;
+				//}
+				//case 0b000000001:
+				//{
+				//	temp[i][j] = 1;
+				//	solving = true;
+				//	break;
+				//}
+				//default:break;
+				//}
+				if (setting.diff >= 4)
 				{
-					temp[i][j] = 8;
-					solving = true;
-					break;
-				}
-				case 0b001000000:
-				{
-					temp[i][j] = 7;
-					solving = true;
-					break;
-				}
-				case 0b000100000:
-				{
-					temp[i][j] = 6;
-					solving = true;
-					break;
-				}
-				case 0b000010000:
-				{
-					temp[i][j] = 5;
-					solving = true;
-					break;
-				}
-				case 0b000001000:
-				{
-					temp[i][j] = 4;
-					solving = true;
-					break;
-				}
-				case 0b000000100:
-				{
-					temp[i][j] = 3;
-					solving = true;
-					break;
-				}
-				case 0b000000010:
-				{
-					temp[i][j] = 2;
-					solving = true;
-					break;
-				}
-				case 0b000000001:
-				{
-					temp[i][j] = 1;
-					solving = true;
-					break;
-				}
-				default:break;
+					if (solving == false)
+					{
+						int tempmask = mask[i][j];
+						for (int k = 0; k < 9; k++)
+						{
+							if (i != k)
+							{
+								tempmask = (tempmask & (~mask[k][j]));
+								for (int l = 0; l < 9; l++)
+								{
+									int tempmask2 = 1 << l;
+									if (tempmask == tempmask2)
+									{
+										temp[i][j] = l + 1;
+										solving = true;
+										break;
+									}
+								}
+								if (solving) break;
+							}
+							if (j != k)
+							{
+								tempmask = (tempmask & (~mask[i][k]));
+								for (int l = 0; l < 9; l++)
+								{
+									int tempmask2 = 1 << l;
+									if (tempmask == tempmask2)
+									{
+										temp[i][j] = l + 1;
+										solving = true;
+										break;
+									}
+								}
+								if (solving) break;
+							}
+							int x = (i / 3) * 3;
+							int y = (j / 3) * 3;
+							for (int l = 0; l < 3; l++)
+							{
+								for (int m = 0; m < 3; m++)
+								{
+									if ((x + l == i) && (y + m == j)) break;
+									else
+									{
+										for (int n = 0; n < 9; n++)
+										{
+											int tempmask2 = 1 << n;
+											if (tempmask == tempmask2)
+											{
+												temp[i][j] = n + 1;
+												solving = true;
+												break;
+											}
+										}
+										if (solving) break;
+									}
+								}
+								if (solving) break;
+							}
+						}
+					}
 				}
 			}
 		}
