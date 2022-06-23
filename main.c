@@ -57,6 +57,13 @@ int main()
 	setting.hint = false;
 	sFunc_Init(&SFunc);
 
+	system("mode con cols=80 lines=20");
+
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.bVisible = 0;
+	cursorInfo.dwSize = 1;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
 	while (1)
 	{
 		for (int i = 0; i < 80; i += 2)
@@ -443,24 +450,28 @@ int ingame()
 
 	int x = 0, y = 0;
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	gotoxy(0, 0);
+	printf("┌ ─ ─ ─ ─ ─ ┬ ─ ─ ─ ─ ─ ┬ ─ ─ ─ ─ ─ ┐\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("├ ─ ─ ─ ─ ─ ┼ ─ ─ ─ ─ ─ ┼ ─ ─ ─ ─ ─ ┤\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("├ ─ ─ ─ ─ ─ ┼ ─ ─ ─ ─ ─ ┼ ─ ─ ─ ─ ─ ┤\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("│           │           │           │\n");
+	printf("└ ─ ─ ─ ─ ─ ┴ ─ ─ ─ ─ ─ ┴ ─ ─ ─ ─ ─ ┘\n");
 	//함수 편집할 때 스크롤 하는 양을 줄이기 위해 중괄호를 씌움
 	{
-		for (int i = 0; i < 38; i += 2)
-		{
-			for (int j = 0; j < 19; j++)
-			{
-				gotoxy(i, j);
-				if (i % 4 == 0 || j % 2 == 0)
-				{
-					if (i % 12 == 0 || j % 6 == 0)
-						printf("■");
-					else printf("□");
-				}
-				else printf("%c", graph[i / 4][j / 2]);
-			}
-		}
-
 		for (int i = 0; i < 9; i++)
 		{
 			for (int j = 0; j < 9; j++)
@@ -479,7 +490,16 @@ int ingame()
 
 		char in;
 
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), DARKGRAY);
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				gotoxy(i * 4 + 2, j * 2 + 1);
+				printf(" ");
+				gotoxy(i * 4 + 2, j * 2 + 1);
+				printf("%c", graph[i][j]);
+			}
+		}
 
 		while (1)
 		{
@@ -489,6 +509,7 @@ int ingame()
 				printf("%d", result);
 			}
 			gotoxy(x * 4 + 2, y * 2 + 1);
+			if (solve[x][y] == 0) printf("□");
 			while (!_kbhit());
 			if (_kbhit()) {
 				in = _getch();
@@ -498,15 +519,27 @@ int ingame()
 					switch (in) {
 					case LEFT:
 						if (x > 0)x--;
+						gotoxy(x * 4 + 6, y * 2 + 1);
+						if (solve[x + 1][y] == 0)
+						printf("  ");
 						break;
 					case RIGHT:
 						if (x < 8)x++;
+						gotoxy(x * 4 - 2, y * 2 + 1);
+						if (solve[x - 1][y] == 0)
+						printf("  ");
 						break;
 					case DOWN:
 						if (y < 8)y++;
+						gotoxy(x * 4 + 2, y * 2 - 1);
+						if (solve[x][y - 1] == 0)
+						printf("  ");
 						break;
 					case UP:
 						if (y > 0)y--;
+						gotoxy(x * 4 + 2, y * 2 + 3);
+						if(solve[x][y + 1] == 0)
+						printf("  ");
 						break;
 					default: break;
 					}
@@ -515,6 +548,7 @@ int ingame()
 				{
 					if (in >= '1' && in <= '9')
 					{
+						gotoxy(x * 4 + 2, y * 2 + 1);
 						checkValidInput(mask, x, y, solve, in - 48);
 					}
 					else
@@ -582,7 +616,11 @@ void checkValidInput(int mask[9][9], int x, int y, int solve[9][9], int in)
 	in--;
 	if ((mask[x][y] & (1 << in)) == (1 << in))
 	{
+		printf("  ");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), DARKGRAY);
+		gotoxy(x * 4 + 2, y * 2 + 1);
 		printf("%d", ++in);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 		solve[x][y] = in;
 		for (int i = 0; i < 9; i++)
 		{
@@ -629,126 +667,65 @@ bool solveWithoutKnuth(int temp[9][9], int mask[9][9], int sudoku[9][9])
 						break;
 					}
 				}
-				//switch (mask[i][j])
-				//{
-				//case 0b100000000:
-				//{
-				//	temp[i][j] = 9;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b010000000:
-				//{
-				//	temp[i][j] = 8;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b001000000:
-				//{
-				//	temp[i][j] = 7;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000100000:
-				//{
-				//	temp[i][j] = 6;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000010000:
-				//{
-				//	temp[i][j] = 5;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000001000:
-				//{
-				//	temp[i][j] = 4;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000000100:
-				//{
-				//	temp[i][j] = 3;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000000010:
-				//{
-				//	temp[i][j] = 2;
-				//	solving = true;
-				//	break;
-				//}
-				//case 0b000000001:
-				//{
-				//	temp[i][j] = 1;
-				//	solving = true;
-				//	break;
-				//}
-				//default:break;
-				//}
-				if (setting.diff >= 4)
+				if (setting.diff >= 4 && solving == false)
 				{
-					if (solving == false)
+					int tempmask = mask[i][j];
+					for (int k = 0; k < 9; k++)
 					{
-						int tempmask = mask[i][j];
-						for (int k = 0; k < 9; k++)
+						if (i != k)
 						{
-							if (i != k)
+							tempmask = (tempmask & (~mask[k][j]));
+							for (int l = 0; l < 9; l++)
 							{
-								tempmask = (tempmask & (~mask[k][j]));
-								for (int l = 0; l < 9; l++)
+								int tempmask2 = 1 << l;
+								if (tempmask == tempmask2)
 								{
-									int tempmask2 = 1 << l;
+									temp[i][j] = l + 1;
+									solving = true;
+									break;
+								}
+							}
+							if (solving) break;
+						}
+						if (j != k)
+						{
+							tempmask = (tempmask & (~mask[i][k]));
+							for (int l = 0; l < 9; l++)
+							{
+								int tempmask2 = 1 << l;
+								if (tempmask == tempmask2)
+								{
+									temp[i][j] = l + 1;
+									solving = true;
+									break;
+								}
+							}
+							if (solving) break;
+						}
+					}
+					int x = (i / 3) * 3;
+					int y = (j / 3) * 3;
+					for (int k = 0; k < 3; k++)
+					{
+						for (int l = 0; l < 3; l++)
+						{
+							if ((x + k == i) && (y + l == j)) break;
+							else
+							{
+								for (int m = 0; m < 9; m++)
+								{
+									int tempmask2 = 1 << m;
 									if (tempmask == tempmask2)
 									{
-										temp[i][j] = l + 1;
+										temp[i][j] = m + 1;
 										solving = true;
 										break;
-									}
-								}
-								if (solving) break;
-							}
-							if (j != k)
-							{
-								tempmask = (tempmask & (~mask[i][k]));
-								for (int l = 0; l < 9; l++)
-								{
-									int tempmask2 = 1 << l;
-									if (tempmask == tempmask2)
-									{
-										temp[i][j] = l + 1;
-										solving = true;
-										break;
-									}
-								}
-								if (solving) break;
-							}
-							int x = (i / 3) * 3;
-							int y = (j / 3) * 3;
-							for (int l = 0; l < 3; l++)
-							{
-								for (int m = 0; m < 3; m++)
-								{
-									if ((x + l == i) && (y + m == j)) break;
-									else
-									{
-										for (int n = 0; n < 9; n++)
-										{
-											int tempmask2 = 1 << n;
-											if (tempmask == tempmask2)
-											{
-												temp[i][j] = n + 1;
-												solving = true;
-												break;
-											}
-										}
-										if (solving) break;
 									}
 								}
 								if (solving) break;
 							}
 						}
+						if (solving) break;
 					}
 				}
 			}
