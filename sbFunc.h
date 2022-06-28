@@ -3,6 +3,7 @@
 #include <time.h>
 #include <assert.h>
 
+//덩치 작은 함수 모아둔 헤더
 typedef struct sudokuBuildFunc
 {
 	void (*swapVertical) (int(*)[9], int, int);
@@ -41,4 +42,5 @@ void makeBitMask(int arr[9][9], int mask[9][9], int a, int b);
 
 void sbFunc_Initializer(sbFunc *sb);
 void smFunc_Initializer(smFunc* sb);
+
 void sFunc_Init(sFunc* sfnc);
