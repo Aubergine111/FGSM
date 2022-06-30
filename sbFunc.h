@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+#include <stdbool.h>
 
 //덩치 작은 함수 모아둔 헤더
 typedef struct sudokuBuildFunc
@@ -27,8 +28,6 @@ typedef struct sudokuFunc
 	void (*sbFunc_Init)(sbFunc*);
 	void (*smFunc_Init)(smFunc*);
 }sFunc;
-
-typedef enum _bool { false, true } bool;
 
 void swapVerticalLine(int arr[9][9], int a, int b);
 void swapHorizontalLine(int arr[9][9], int a, int b);

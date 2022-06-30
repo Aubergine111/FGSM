@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClCompile Include="sudoku.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="sbFunc.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="stack.c">
+    <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="sbFunc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="stack.h">
+    <ClInclude Include="sdk.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
