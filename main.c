@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <stdbool.h>
 #include "sdk.h"
+#include "memk.h"
 
 #define UP 72
 #define DOWN 80
@@ -121,7 +122,8 @@ void keycontrol()
 				case 0:
 				{
 					system("cls");
-					exit(0);
+					memmain();
+					system("cls");
 					break;
 				}
 				case 1:

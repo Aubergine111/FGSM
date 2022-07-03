@@ -140,12 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="memoryg.c" />
     <ClCompile Include="sudoku.c">
       <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</SDLCheck>
     </ClCompile>
     <ClCompile Include="sbFunc.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="memk.h" />
     <ClInclude Include="sbFunc.h" />
     <ClInclude Include="sdk.h" />
   </ItemGroup>
