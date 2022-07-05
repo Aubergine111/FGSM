@@ -5,3 +5,5 @@ void life(int score, int life);		// 格见
 void CursorView();		// 目辑 见扁绰 窃荐
 void memmain();
 void GameOver();
+void printcr();
+void tmpname(char user);
