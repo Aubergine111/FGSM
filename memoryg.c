@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>	
 #include <windows.h>	// sleep함수 사용하기 위한 헤더파일
-#include<mmsystem.h>	// playsound 함수 
-#pragma comment(lib,"winmm.lib")
+#include <conio.h>
 #include <time.h>
 #include <stdbool.h>		// 불 대수
 #include "memk.h"
@@ -48,7 +47,7 @@ void play()
 	int block = 0;		// 콘솔창에서 랜덤으로 입력된 숫자, 문자 위치 지정하기 위한 변수
 	int cnt = 0;		// 정답횟수 지정
 	int repeat = 3;		// ? 
-	int st = 3000;		// 3초기다림
+	int st = 2000;		// 3초기다림
 	char user;			// 사용자가 게임을 시작할건지 대답을 입력받음
 	char* word[5];		// 내가 지정한 단어 5값 저장
 	char* w_ans[6];		// 사용자가 내가 지정한 단어 값을 입력하기 위한 변수
@@ -72,78 +71,55 @@ void play()
 	Sleep(2000);
 	setcolor(YELLOW);
 	printf("\n게임을 시작하고 싶으시면 \'Y\'를 입력해주세요 : ");
-	scanf("%c", &user);
-	Sleep(1000);
+	while (!_kbhit());
+	if (_kbhit) user = _getch();
 	setcolor(WHITE);
 	system("cls");
 
-	if (user == 'Y' || user == 'y')		// 사용자가 y를 입력했을경우
+	if (user == 'Y' || user == 'y')		// 사용자가 'y'를 입력했울경우
 	{
 		printf("게임을 시작합니다!!\n");
 		Sleep(1000);					// 1초기다림
-		setcolor(YELLOW);				// 폰트 색 노랑색 변경
-		printf("\n~Good Luck~");
-		Sleep(3000);
-		setcolor(WHITE);
+		setcolor(YELLOW);
+		printf("\n~Good Luck~\n");		// 폰트 색 노란색 변경
+		Sleep(3000);					// 3초기다림
+		setcolor(WHITE);				// 폰트 색 흰색 변경
 		system("cls");					// 콘솔창 비우기
 		for (i = 3; i > 0; i--)
 		{
-			printf("\n%d초 후에 시작!\n\n", i);	// 3초후 시작
+			printf("\n%d초 후에 시작!\n\n", i);	//  y 입력 받은 후 3초후 시작
 			Sleep(1000);
 
 		}
-		Sleep(1000);					// 1초 쉬었다가
-		while (1)			// 무한반복
+		Sleep(1000);
+		while (1)		// 무한반복
 		{
-
-			block = 0;		// 콘솔창 출력 좌표 처음엔  = 0 ~ 20인 구간에서만 1개의 숫자,단어,문자 출력
+			block = 0;
 			correct = true;
 			for (i = 0; i < 5; i++)
 			{
-				if (cnt > 5)			// 정답횟수가 5보다 크면
+				if (cnt > 10)	// 만약 정답횟수가 10보다 클경우
 				{
-					while (gets() != '\n');	// enter 값 만나기 전까지 입력버퍼 지움.
-					a[i] = rand() % 94 + 33;	// 숫자 + 문자(알파벳,특수문자)를 랜덤으로 출력
+					a[i] = rand() % 94 + 33;		// 문자 출력
 				}
-				else							// 그렇지 않으면
-					a[i] = rand() % 10 + 48;	// 숫자를 랜덤으로 출력
-			}
-			//-------------------------------------------------------------------
-			if (cnt >= 2 && cnt < 5)		// 정답횟수가 2보다 크거나 같으면서 5보다 작을경우
-			{
-				for (i = 0; i < 5; i++)		// word[i]번째 있는 단어를 순서대로 출력
-				{
-					word[i] = "apple";
-
-				}
-			}
-			system("cls");				// 콘솔창 비우기
-			life(score, hp);			// 점수 목숨 불러오기
-
-			if (cnt < 2 || cnt >= 5)	// 정답횟수가 2보다 작거나 5보다 크거나 같을경우
-			{
-				for (i = 0; i < 5; i++)	// 랜덤숫자를 5번 출력
-				{
-					gotoxy(rand() % 20 + block, rand() % +26 + 4);		// x,y위치를 랜덤으로 지정
-					setcolor(BLUE);		// 폰트 색 파란색으로 변경
-					printf("%c", a[i]);
-					block += 20;	// 0 ~ 20 사이에 1개의 숫자, 문자를 출력하고 20을 더해가면서 위치 변경	
-				}
-				Sleep(st);		// st = 3초를 뜻함
-			}
-			else if (cnt >= 2 && cnt < 5)	// 정답횟수가 2보다 크거나 같거나, 5보다 작으면
-			{
-				for (i = 0; i < 5; i++)		// 5번 반복
-				{
-					gotoxy(rand() % 20 + block, rand() % +26 + 4);	// x,y좌표 랜덤으로 지정
-					setcolor(BLUE);		// 폰트 색 파란색으로 변경
-					printf("%s", word[i]);	// 내가 저장한 단어들 순서대로 출력
-					block += 20;		// 0 ~ 20 사이에 1개의 단어 출력하고 20을 더해가면서 위치 변경
-				}
-				Sleep(st);		// st = 3초를 뜻함
+				else
+					a[i] = rand() % 10 + 48;		// 그렇지 않으면 숫자출력
 			}
 
-			for (i = 0; i < 10; i++)	// 10번 반복
+			system("cls");							// 콘솔창 비우고
+			life(score, hp);						// 목숨,점수 불러오고
+
+			for (i = 0; i < 5; i++)
+			{
+				gotoxy(rand() % 20 + block, rand() % +26 + 4);	// 랜덤 위치에 숫자,문자 출력
+				setcolor(BLUE);									// 폰트 색 파랑
+				printf("% c", a[i]);							// 출력
+				block += 20;									//x값 20 증가
+			}
+			Sleep(st);		// st = 3초를 뜻함
+
+
+			for (i = 0; i < 10; i++)
 			{
 				for (j = 0; j < 10; j++)
 				{
@@ -156,37 +132,43 @@ void play()
 			rewind(stdin);				// 입력 버퍼 비우기
 			for (i = 0; i < 5; i++)
 			{
-				if (5 - i == 1) scanf("%c", &ans1);		//  아메코드이다... 사용자가 정답을 입력 (랜덤 숫자 정답 입력)
-				else if (cnt >= 2 && cnt < 5)
-				{
-					scanf("%s", w_ans);	// 단어 정답 입력
-				}
-				else			scanf("%c ", &ans1);		// 랜덤, 숫자,문자 정답 입력
+				if (5 - i == 1) scanf("%c", &ans1);		//..? 일때 사용자가 정답 입력하기
+				else			scanf("%c ", &ans1);	// 정답 입력하기
 
-				if (ans1 != a[i])		// 만약 정답이 아닐경우
+				if (ans1 != a[i])						// 만약에 입력한 값이 정답이 아닐때
 				{
-					correct = false;	//0을 반환
+					correct = false;					// false값을 correct에 대입
 				}
 
 			}
 
-			if (correct) {		// 정답일 경우 성공출력
+			if (correct) {							// correct일 경우에
 				setcolor(YELLOW);
-				printf("성공!!!\n");
+				printf("성공!!!\n");					// 성공 출력
 				setcolor(WHITE);
-				score += 50;	// 점수에 50 을 더함
-				life(score, hp);	// 점수,체력 불러옴
-				cnt++;	// 맞힌횟수 1 증가
+				score += 50;						//점수 50점 증가
+				life(score, hp);
+				cnt++;								// 정답횟수 증가
+				if (st > 1000) st -= 100;
 			}
-			else       // 아닐경우
+			else
 			{
 				setcolor(RED);
-				printf("정답이 아닙니다...");		// 출력
+				printf("정답이 아닙니다...");		// 아닐경우 정답이니라고 출력
 				setcolor(WHITE);
-				hp--;		//체력 1감소
-				life(score, hp);	// 점수,체력 불러옴
+				hp--;							// 체력 -1	
+				life(score, hp);				// 점수, 체력 불러오기
 			}
-			Sleep(1000);		// 1초 쉬었다가
+			Sleep(1000);
+
+			if (hp < 1)
+			{
+				GameOver();
+				while (!_kbhit());
+				if (_kbhit) user = _getch();
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+				return;
+			}
 			//==========================================================================================================================================
 
 		}
@@ -242,8 +224,29 @@ void life(int score, int life)
 		printf("★");
 		x += 2;
 	}
+}
 
+void GameOver()
+{
+	system("cls");    // 콘솔창 초기화
+	system("mode con cols=100 lines=30 | title = 게임제목"); // 콘솔창 크기 조절
 
+	gotoxy(20, 9);
+	printf("#########  # #          ####    #       ####         ##    ##   #\n");
+	gotoxy(20, 10);
+	printf("       #   # #        #      #  #     #      #       ##    ##   #\n");
+	gotoxy(20, 11);
+	printf("      #  ### #          ####    #       ####         ########   #\n");
+	gotoxy(20, 12);
+	printf("     #     # #                  #         #          ##    ## ###\n");
+	gotoxy(20, 13);
+	printf("    #      # #           ########         #          ########   #\n");
+	gotoxy(20, 14);
+	printf("   #       # #           #      #     ########                  #\n");
+	gotoxy(20, 15);
+	printf("                         ########                               #\n");
+	gotoxy(20, 29);
+	printf("아무 키나 눌러서 돌아가기");
 }
 
 void CursorView()
