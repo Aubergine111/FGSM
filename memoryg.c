@@ -38,6 +38,160 @@ void play()
 	srand(time(NULL));
 	system("mode con cols=100 lines=30 | title = 게임제목");		// 콘솔창 크키 조절
 
+	char user;			// 사용자가 게임을 시작할건지 대답을 입력받음
+
+	printf("Memory Game에 오신걸 환영한다. ^_^\n");
+	Sleep(2000);
+	printf("\n이 게임은 당신의 기억력을 테스트하는 게임입니다\n");
+	Sleep(2000);
+	printf("\n화면에 나오는 숫자,문자들을 잘 보고 콘솔창에 입력 해 주세요.\n");
+	Sleep(2000);
+	setcolor(YELLOW);
+	printf("\n정답을 입력하실때는 꼭 왼쪽에 출력된 숫자, 문자들부터 차례로 입력 해 주세요.\n");
+	Sleep(2000);
+	setcolor(WHITE);
+	printf("\n별은 목숨을 뜻합니다.\n");
+	Sleep(2000);
+	printf("\n문제를 틀릴때 마다 별의 갯수가 1개씩 줄어듭니다.\n");
+	Sleep(3000);
+	printf("\n1000점을 획득하여 왕관을 획득하십시오.\n");
+	Sleep(2000);
+	setcolor(YELLOW);
+	printf("\n게임을 시작하고 싶으시면 \'Y\'를 입력해주세요 : ");
+	while (!_kbhit());
+	if (_kbhit) user = _getch();
+	setcolor(WHITE);
+	system("cls");
+	tmpname(user);
+}
+
+void setcolor(unsigned text) // 색깔 선택 
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), text);
+}
+
+void life(int score, int life)
+{
+	int x = 0;
+	gotoxy(42, 1);
+	setcolor(YELLOW);
+	printf("Score : %d점", score);
+	gotoxy(0, 3);
+	printf("----------------------------------------------------------------------------------------------------");
+	for (int i = life; i > 0; i--) {
+		gotoxy(42 + x, 2);
+		printf("★");
+		x += 2;
+	}
+}
+
+void GameOver()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+	system("cls");    // 콘솔창 초기화
+	system("mode con cols=100 lines=30 | title = 게임제목"); // 콘솔창 크기 조절
+
+	gotoxy(20, 9);
+	printf("#########  # #          ####    #       ####         ##    ##   #\n");
+	gotoxy(20, 10);
+	printf("       #   # #        #      #  #     #      #       ##    ##   #\n");
+	gotoxy(20, 11);
+	printf("      #  ### #          ####    #       ####         ########   #\n");
+	gotoxy(20, 12);
+	printf("     #     # #                  #         #          ##    ## ###\n");
+	gotoxy(20, 13);
+	printf("    #      # #           ########         #          ########   #\n");
+	gotoxy(20, 14);
+	printf("   #       # #           #      #     ########                  #\n");
+	gotoxy(20, 15);
+	printf("                         ########                               #\n");
+	gotoxy(0, 29);
+	printf("아무 키나 눌러서 돌아가기");
+}
+
+void CursorView()
+{
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.dwSize = 1; //커서 굵기 (1 ~ 100)
+	cursorInfo.bVisible = FALSE; //커서 Visible TRUE(보임) FALSE(숨김)
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
+void printcr()
+{
+	system("cls");    // 콘솔창 초기화
+	setcolor(YELLOW);
+	gotoxy(48-4, 1);
+	printf("★  ★");
+	gotoxy(50-4, 2);
+	printf("★");
+	gotoxy(49-4, 3);
+	printf("★★");
+	gotoxy(20-4, 5);
+	printf("★");
+	gotoxy(82-4, 5);
+	printf("★");
+	gotoxy(47-4, 4);
+	printf("★★★★");
+	gotoxy(50-4, 5);
+	printf("★\n");
+	gotoxy(20-4, 6);
+	printf("■■                    ■■■■■■■                      ■■\n");
+	gotoxy(20-4, 7);
+	printf("■  ■                  ■          ■                  ■    ■\n");   // 18
+	gotoxy(20-4, 8);
+	printf("■     ■            ■                 ■           ■       ■\n");   //12
+	gotoxy(20-4, 9);
+	printf("■        ■     ■                         ■    ■          ■\n");
+	gotoxy(20-4, 10);
+	printf("■           ■                                ■             ■\n");
+	gotoxy(20-4, 11);
+	printf("■                                                            ■\n");
+	setcolor(BLUE);
+	gotoxy(51-4, 11);
+	printf("★");// 별 첫
+	setcolor(YELLOW);
+	gotoxy(20-4, 12);
+	printf("■                                                            ■");
+	gotoxy(20-4, 13);
+	printf("■                                                            ■");
+	gotoxy(20-4, 14);
+	printf("■                                                            ■");
+	gotoxy(20-4, 15);
+	printf("■                                                            ■");
+	gotoxy(20-4, 16);
+	printf("■                                                            ■");
+	gotoxy(20-4, 17);
+	printf("■                                                            ■");
+	gotoxy(20-4, 18);
+	printf("■                                                            ■\n");
+	gotoxy(20-4, 19);
+	printf("■                                                            ■\n");
+	gotoxy(20-4, 20);
+	printf("■                                                            ■\n");
+	gotoxy(20-4, 21);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ \n");// 40
+	setcolor(BLUE);
+	gotoxy(46-4, 12);
+	printf("★★★★★★");      // 끝 81
+	gotoxy(47-4, 13);
+	printf("★      ★");
+	gotoxy(44-4, 14);
+	printf("★★★★★★★★");
+	gotoxy(48-4, 15);
+	printf("★    ★");
+	gotoxy(46-4, 16);
+	printf("★★★★★★");
+	gotoxy(49-4, 17);
+	printf("★\n");
+	setcolor(YELLOW);
+	gotoxy(0, 22);
+	printf("아무 키나 눌러서 돌아가기");
+}
+
+void tmpname(char user)
+{
 	int score = 0;		// 최종점수
 	int hp = 5;			// 체력
 	char a[5];			// 랜덤으로 입력된 숫자, 문자 5개 값이 넣어짐
@@ -48,34 +202,9 @@ void play()
 	int cnt = 0;		// 정답횟수 지정
 	int repeat = 3;		// ? 
 	int st = 2000;		// 3초기다림
-	char user;			// 사용자가 게임을 시작할건지 대답을 입력받음
 	char* word[5];		// 내가 지정한 단어 5값 저장
 	char* w_ans[6];		// 사용자가 내가 지정한 단어 값을 입력하기 위한 변수
 	bool correct = true;	// correct 값에 1저장
-
-	printf("Memory Game에 오신걸 환영한다. ^_^\n");
-	Sleep(2000);
-	printf("\n이 게임은 당신의 기억력을 테스트하는 게임입니다\n");
-	Sleep(2000);
-	printf("\n화면에 나오는 숫자,문자들을 잘 보고 콘솔창에 입력 해 주세요.\n");
-	Sleep(2000);
-	setcolor(YELLOW);
-	printf("\n정답을 입력하실때는 꼭 왼쪽에 출력된 숫자,문자들부터 차례로 입력 해 주세요.\n");
-	Sleep(2000);
-	setcolor(WHITE);
-	printf("\n별은 목숨을 뜻합니다.\n");
-	Sleep(2000);
-	printf("\n문제를 틀릴때 마다 별의 갯수가 1개씩 줄어듭니다.\n");
-	Sleep(3000);
-	printf("\n최대한 많은 문제를 맞춰서 1등에게만 주어지는 왕관을 획득하십시요.\n");
-	Sleep(2000);
-	setcolor(YELLOW);
-	printf("\n게임을 시작하고 싶으시면 \'Y\'를 입력해주세요 : ");
-	while (!_kbhit());
-	if (_kbhit) user = _getch();
-	setcolor(WHITE);
-	system("cls");
-
 	if (user == 'Y' || user == 'y')		// 사용자가 'y'를 입력했울경우
 	{
 		printf("게임을 시작합니다!!\n");
@@ -161,6 +290,15 @@ void play()
 			}
 			Sleep(1000);
 
+			if (score >= 1000)
+			{
+				printcr();
+				while (!_kbhit());
+				if (_kbhit) user = _getch();
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+				return;
+			}
+
 			if (hp < 1)
 			{
 				GameOver();
@@ -204,56 +342,3 @@ void play()
 		Sleep(1000);
 	}
 }
-
-void setcolor(unsigned text) // 색깔 선택 
-{
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), text);
-}
-
-void life(int score, int life)
-{
-	int x = 0;
-	gotoxy(42, 1);
-	setcolor(YELLOW);
-	printf("Score : %d점", score);
-	gotoxy(0, 3);
-	printf("----------------------------------------------------------------------------------------------------");
-	for (int i = life; i > 0; i--) {
-		gotoxy(42 + x, 2);
-		printf("★");
-		x += 2;
-	}
-}
-
-void GameOver()
-{
-	system("cls");    // 콘솔창 초기화
-	system("mode con cols=100 lines=30 | title = 게임제목"); // 콘솔창 크기 조절
-
-	gotoxy(20, 9);
-	printf("#########  # #          ####    #       ####         ##    ##   #\n");
-	gotoxy(20, 10);
-	printf("       #   # #        #      #  #     #      #       ##    ##   #\n");
-	gotoxy(20, 11);
-	printf("      #  ### #          ####    #       ####         ########   #\n");
-	gotoxy(20, 12);
-	printf("     #     # #                  #         #          ##    ## ###\n");
-	gotoxy(20, 13);
-	printf("    #      # #           ########         #          ########   #\n");
-	gotoxy(20, 14);
-	printf("   #       # #           #      #     ########                  #\n");
-	gotoxy(20, 15);
-	printf("                         ########                               #\n");
-	gotoxy(20, 29);
-	printf("아무 키나 눌러서 돌아가기");
-}
-
-void CursorView()
-{
-	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
-	cursorInfo.dwSize = 1; //커서 굵기 (1 ~ 100)
-	cursorInfo.bVisible = FALSE; //커서 Visible TRUE(보임) FALSE(숨김)
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-}
-

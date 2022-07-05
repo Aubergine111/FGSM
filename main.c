@@ -20,6 +20,10 @@ void textcolor(int color_number);
 
 int main()
 {
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.bVisible = 0;
+	cursorInfo.dwSize = 1;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 	while (1)
 	{
 		system("mode con cols=100 lines=30 | title = FGSM");
@@ -94,7 +98,7 @@ void keycontrol()
 					{
 						y++;
 						gotoxy(40, 20 + (y - 1) * 2);
-						printf(" ");
+						printf("  ");
 					}
 					break;
 				case UP:
@@ -102,7 +106,7 @@ void keycontrol()
 					{
 						y--;
 						gotoxy(40, 20 + (y + 1) * 2);
-						printf(" ");
+						printf("  ");
 					}
 					break;
 				default: break;
