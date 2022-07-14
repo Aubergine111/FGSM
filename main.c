@@ -4,8 +4,11 @@
 #include <time.h>
 #include <conio.h>
 #include <stdbool.h>
+#include <direct.h>
+#include "resource.h"
 #include "sdk.h"
 #include "memk.h"
+#include "nek.h"
 
 #define UP 72
 #define DOWN 80
@@ -14,7 +17,7 @@
 
 void gotoxy(int x, int y);
 void titledraw();
-int menudraw();
+void menudraw();
 void keycontrol();
 void textcolor(int color_number);
 
@@ -80,7 +83,7 @@ void titledraw()
 void keycontrol()
 {
 	bool tmp = false;
-	int y = 0;
+	static int y = 0;
 	char in;
 	while (1)
 	{
@@ -102,7 +105,7 @@ void keycontrol()
 					}
 					break;
 				case UP:
-					if (y > 0)
+					if (y > -1)
 					{
 						y--;
 						gotoxy(40, 20 + (y + 1) * 2);
@@ -123,6 +126,12 @@ void keycontrol()
 			{
 				switch (y)
 				{
+				case -1:
+				{
+					system("cls");
+					nemomain();
+					break;
+				}
 				case 0:
 				{
 					system("cls");
@@ -151,14 +160,16 @@ void keycontrol()
 
 }
 
-int menudraw()
+void menudraw()
 {
+	gotoxy(43, 18);
+	printf("- 네모네모로직 -");
 	gotoxy(43, 20);
-	printf("- memory_game -");
+	printf("-  메모리 게임 -");
 	gotoxy(43, 22);
-	printf("- sudoku_game - ");
+	printf("-    스도쿠    - ");
 	gotoxy(43, 24);
-	printf("-    종료     -");
+	printf("-     종료     -");
 
 
 

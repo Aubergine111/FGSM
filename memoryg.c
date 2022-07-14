@@ -41,21 +41,21 @@ void play()
 	char user;			// 사용자가 게임을 시작할건지 대답을 입력받음
 
 	printf("Memory Game에 오신걸 환영한다. ^_^\n");
-	Sleep(2000);
+	Sleep(1000);
 	printf("\n이 게임은 당신의 기억력을 테스트하는 게임입니다\n");
-	Sleep(2000);
+	Sleep(1000);
 	printf("\n화면에 나오는 숫자,문자들을 잘 보고 콘솔창에 입력 해 주세요.\n");
-	Sleep(2000);
+	Sleep(1000);
 	setcolor(YELLOW);
 	printf("\n정답을 입력하실때는 꼭 왼쪽에 출력된 숫자, 문자들부터 차례로 입력 해 주세요.\n");
-	Sleep(2000);
+	Sleep(1000);
 	setcolor(WHITE);
 	printf("\n별은 목숨을 뜻합니다.\n");
-	Sleep(2000);
+	Sleep(1000);
 	printf("\n문제를 틀릴때 마다 별의 갯수가 1개씩 줄어듭니다.\n");
-	Sleep(3000);
-	printf("\n1000점을 획득하여 왕관을 획득하십시오.\n");
 	Sleep(2000);
+	printf("\n1000점을 획득하여 왕관을 획득하십시오.\n");
+	Sleep(1000);
 	setcolor(YELLOW);
 	printf("\n게임을 시작하고 싶으시면 \'Y\'를 입력해주세요 : ");
 	while (!_kbhit());
@@ -229,7 +229,12 @@ void tmpname(char user)
 			{
 				if (cnt > 10)	// 만약 정답횟수가 10보다 클경우
 				{
-					a[i] = rand() % 94 + 33;		// 문자 출력
+					a[i] = rand() % 94 + 33;
+					if (cnt == 11)
+					{
+						st = 2000;
+					}
+					// 문자 출력
 				}
 				else
 					a[i] = rand() % 10 + 48;		// 그렇지 않으면 숫자출력
@@ -275,7 +280,14 @@ void tmpname(char user)
 				setcolor(YELLOW);
 				printf("성공!!!\n");					// 성공 출력
 				setcolor(WHITE);
-				score += 50;						//점수 50점 증가
+				if (cnt > 10)	// 만약 정답횟수가 10보다 클경우
+				{
+					score += 100;
+				}				//점수 100점 증가
+				else
+				{
+					score += 50;
+				}
 				life(score, hp);
 				cnt++;								// 정답횟수 증가
 				if (st > 1000) st -= 100;
