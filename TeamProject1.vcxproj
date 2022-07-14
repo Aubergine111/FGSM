@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="memoryg.c" />
+    <ClCompile Include="nemo.c" />
     <ClCompile Include="sudoku.c">
       <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</SDLCheck>
     </ClCompile>
@@ -148,8 +149,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="memk.h" />
+    <ClInclude Include="nek.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="sbFunc.h" />
     <ClInclude Include="sdk.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\AppData\Local\FGSM\test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TeamProject1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\AppData\Local\FGSM\click.wav" />
+    <Media Include="..\..\..\..\AppData\Local\FGSM\select.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

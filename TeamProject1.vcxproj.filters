@@ -27,6 +27,9 @@
     <ClCompile Include="memoryg.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="nemo.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sbFunc.h">
@@ -38,5 +41,33 @@
     <ClInclude Include="memk.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="nek.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\AppData\Local\FGSM\test.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TeamProject1.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\AppData\Local\FGSM\click.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="..\..\..\..\AppData\Local\FGSM\select.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
 </Project>

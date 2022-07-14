@@ -3,8 +3,11 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <mmsystem.h>
 #include "sbFunc.h"
 #include "sdk.h"
+#include "resource.h"
+#pragma comment (lib, "winmm.lib")
 
 
 //글씨 색 전용
@@ -46,6 +49,8 @@ Setting setting;
 //#define DEBUG
 //#define DEBUG2
 
+//#define sRoot "C:\\Users\\USER\\AppData\\Local\\FGSM\\"
+
 FILE* file = NULL;
 
 //덩치 작고 자잘한 함수들 분리
@@ -53,7 +58,11 @@ sFunc SFunc;
 
 int sdk()
 {
-	if (0 != fopen_s(&file, "C:\\Users\\USER\\AppData\\Local\\FGSM\\data.txt", "r")) exit(1);
+	if (0 != fopen_s(&file, "data.txt", "r"))
+	{
+		if (0 != fopen_s(&file, "data.txt", "w")) exit(1);
+		fclose(file);
+	}
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 	bool tmp = false;
@@ -66,7 +75,7 @@ int sdk()
 		setting.diff = 4;
 		setting.hint = 0;
 		fclose(file);
-		if (0 != fopen_s(&file, "C:\\Users\\USER\\AppData\\Local\\FGSM\\data.txt", "w")) exit(1);
+		if (0 != fopen_s(&file, "data.txt", "w")) exit(1);
 		fprintf_s(file, "%d %d", setting.diff, setting.hint);
 	}
 	fclose(file);
@@ -321,7 +330,7 @@ void settingScreen()
 							if (a <= 6 && a > 0)
 							{
 								setting.diff = a;
-								if (0 != fopen_s(&file, "C:\\Users\\USER\\AppData\\Local\\FGSM\\data.txt", "w")) exit(1);
+								if (0 != fopen_s(&file, "data.txt", "w")) exit(1);
 								fprintf_s(file, "%d %d", setting.diff, setting.hint);
 								fclose(file);
 								break;
@@ -362,7 +371,7 @@ void settingScreen()
 							if (!strcmp(s, "true"))
 							{
 								setting.hint = 1;
-								if (0 != fopen_s(&file, "C:\\Users\\USER\\AppData\\Local\\FGSM\\data.txt", "w")) exit(1);
+								if (0 != fopen_s(&file, "data.txt", "w")) exit(1);
 								fprintf_s(file, "%d %d", setting.diff, setting.hint);
 								fclose(file);
 								break;
@@ -370,7 +379,7 @@ void settingScreen()
 							else if (!strcmp(s, "false"))
 							{
 								setting.hint = 0;
-								if (0 != fopen_s(&file, "C:\\Users\\USER\\AppData\\Local\\FGSM\\data.txt", "w")) exit(1);
+								if (0 != fopen_s(&file, "data.txt", "w")) exit(1);
 								fprintf_s(file, "%d %d", setting.diff, setting.hint);
 								fclose(file);
 								break;
@@ -519,7 +528,7 @@ int ingame()
 					temp[i][j] = solve[i][j];
 				}
 			}
-			solveWithoutKnuth(temp, mask);
+			solveS(temp, mask);
 			tmp = true;
 			for (int i = 0; i < 9; i++)
 			{
@@ -561,7 +570,7 @@ int ingame()
 					temp[i][j] = solve[i][j];
 				}
 			}
-			solveWithoutKnuth(temp, mask);
+			solveS(temp, mask);
 			tmp = true;
 			for (int i = 0; i < 9; i++)
 			{
@@ -795,6 +804,7 @@ int ingame()
 				if (in == -32)
 				{
 					in = _getch();
+					PlaySound(MAKEINTRESOURCE(IDR_WAVE2), NULL, SND_RESOURCE | SND_ASYNC);
 					switch (in) {
 					case LEFT:
 						if (x > 0)x--;
@@ -975,8 +985,6 @@ int ingame()
 	return 0;
 }
 
-
-
 void submit(int solve[9][9], int sudoku[9][9])
 {
 	bool b = true;
@@ -1046,7 +1054,6 @@ void submit(int solve[9][9], int sudoku[9][9])
 	}
 }
 
-
 void getInput(int mask[9][9], int x, int y, int solve[9][9], int in)
 {
 	in--;
@@ -1054,6 +1061,7 @@ void getInput(int mask[9][9], int x, int y, int solve[9][9], int in)
 	{
 		if ((mask[x][y] & (1 << in)) == (1 << in))
 		{
+			PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_ASYNC);
 			printf("  ");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), DARKGRAY);
 			gotoxy(x * 4 + 2, y * 2 + 1);
@@ -1073,6 +1081,7 @@ void getInput(int mask[9][9], int x, int y, int solve[9][9], int in)
 	{
 		if (solve[x][y] == 0)
 		{
+			PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_ASYNC);
 			printf("  ");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), DARKGRAY);
 			gotoxy(x * 4 + 2, y * 2 + 1);
@@ -1092,8 +1101,8 @@ void getInput(int mask[9][9], int x, int y, int solve[9][9], int in)
 
 //분리 가능하지만 C에는 Boolean이 없기 때문에 Boolean을 만들어둔 메인에서 작성
 
-//커누스 X 없이 풀고 찍지 않으면 더이상 풀 수 없을 때 반환
-void solveWithoutKnuth(int temp[9][9], int mask[9][9])
+//백트래킹
+void solveS(int temp[9][9], int mask[9][9])
 {
 	for (int i = 0; i < 9; i++)
 	{
@@ -1107,36 +1116,10 @@ void solveWithoutKnuth(int temp[9][9], int mask[9][9])
 
 	/*이 부분 코드 설명: 
 	비트마스크를 읽어 가능한 경우의 수가 1개이면 바로 체크
-	아닐 시 다른 칸을 읽어 1개로 줄일 수 있으면 체크
 	아닐 시 체크하지 않고 넘어감,
 	81칸 전부 체크에 실패할 시 풀었다 판단하고 루프 탈출*/
 	while (solving)
 	{
-#ifdef DEBUG2
-		printf("\n");
-		for (int i = 0; i < 9; i++)
-		{
-			for (int j = 0; j < 9; j++)
-			{
-				printf("%d ", temp[i][j]);
-			}
-			printf("\n");
-		}
-		for (int i = 0; i < 9; i++)
-		{
-			for (int j = 0; j < 9; j++)
-			{
-				for (int k = 8; k >= 0; --k) {
-					int result = mask[i][j] >> k & 1;
-					printf("%d", result);
-				}
-				printf(" ");
-			}
-			printf("\n");
-		}
-		if (setting.diff > 5)
-			Sleep(200);
-#endif
 		solving = false;
 		for (int i = 0; i < 9; i++)
 		{
@@ -1147,7 +1130,6 @@ void solveWithoutKnuth(int temp[9][9], int mask[9][9])
 					int tempmask = 1 << k;
 					if (mask[i][j] == tempmask)
 					{
-
 						temp[i][j] = k + 1;
 						solving = true;
 						for (int i = 0; i < 9; i++)
@@ -1158,6 +1140,10 @@ void solveWithoutKnuth(int temp[9][9], int mask[9][9])
 				}
 			}
 		}
+	}
+	if (setting.diff > 6)
+	{
+
 	}
 }
 
@@ -1240,7 +1226,7 @@ void genBasedOnRand(int arr[9][9], int mask[9][9])
 			}
 		}
 		fail = false;
-		solveWithoutKnuth(arr, mask);
+		solveS(arr, mask);
 		for (int i = 0; i < 9; i++)
 		{
 			for (int j = 0; j < 9; j++)

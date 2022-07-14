@@ -1,5 +1,5 @@
 #pragma once
-void solveWithoutKnuth(int temp[9][9], int mask[9][9]);
+void solveS(int temp[9][9], int mask[9][9]);
 void getInput(int mask[9][9], int x, int y, int solve[9][9], int in);
 void gotoxy(int x, int y);
 void settingScreen();
